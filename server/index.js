@@ -32,6 +32,8 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "You hit the end point!" });
 });
 
+app.get("/api/getItemsByCategory/:category", getItemsbyCategory)
+
 app.get("/api/getItemById/:_id", getItemByID)
 
 app.patch("/api/BuyItem", buyItem)

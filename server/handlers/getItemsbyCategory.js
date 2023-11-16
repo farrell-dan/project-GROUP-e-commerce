@@ -5,13 +5,16 @@ const { MONGO_URI } = process.env;
 const getItemsByCategory = async (req, res) => {
     const client = new MongoClient(MONGO_URI);
 
+    let { category } = req.params;
+        
     try {
         await client.connect();
-        const db = client.db("ECommerceWebsite");
+        const db = client.db("ECommerceWebsite");   
 
-        const { category } = req.params;
+        const items = await db.collection("Items").find( { category : { $regex: category,
+        $options: "i" }}).toArray();
 
-        const items = await db.collection("Items").find({ category }).toArray();
+
 
         if (items && items.length > 0) {
             res.status(200).json({ status: 200, message: "Here are your items", data: items });
