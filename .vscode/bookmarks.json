@@ -1,15 +1,20 @@
 {
 	"files": [
 		{
-			"path": "server/BuyItem.js",
+			"path": "server/handlers/buyItem.js",
 			"bookmarks": [
 				{
-					"line": 70,
+					"line": 81,
 					"column": 3,
 					"label": ""
 				},
 				{
-					"line": 128,
+					"line": 110,
+					"column": 0,
+					"label": "Verify the Endoint until that point"
+				},
+				{
+					"line": 139,
 					"column": 3,
 					"label": "Wherre the loop end, need to check that"
 				}

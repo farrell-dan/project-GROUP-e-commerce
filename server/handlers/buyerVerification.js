@@ -5,10 +5,10 @@
 const BuyerVerification = (firstName, lastName, creditCardNumber, expiration) => {
 
   //RegEx to test if variable contains only number
-  new RegExp = /^\d+$/;
+  const testVisaNumber =  new RegExp ( /^\d+$/);
 
   //Regex to test if variable contains only date in this format : 25/04
-  new RegExp = /^\d{1,2}\/{1}\d{1,2}$/;
+  const testVisaExpirationDate = new RegExp(/^\d{1,2}\/{1}\d{1,2}$/);
 
 
 
@@ -18,13 +18,13 @@ const BuyerVerification = (firstName, lastName, creditCardNumber, expiration) =>
     .json({status:404, message : `Please fill in all the required field, you forgot : (${firstName && firstName}), (${lastName && lastName}), ${creditCardNumber && creditCardNumber}, ${expiration && expiration}` })
   }
 
-  if (RegExp.test(creditCardNumber)) {
+  if (testVisaNumber.test(creditCardNumber)) {
     return response
     .status(401)
     .json({status:401, message : `Please verify the card Number, card number can only contain numbers, you enter : ${creditCardNumber}` })
   }
   
-  if (RegExp.test(expiration)) {
+  if (testVisaExpirationDate.test(expiration)) {
     return response
     .status(401)
     .json({status:401, message : `Please verify the expiration number, you provided : ${expiration}`})

@@ -34,7 +34,7 @@ app.get("/api/test", (req, res) => {
 
 app.get("/api/getItemById/:_id", getItemByID)
 
-app.patch("/api/BuyItem", BuyItem)
+app.patch("/api/BuyItem", buyItem)
 
 //test MongoDB get w/ db & collection names used as examples, 
 app.get("/api/testMongo", async (req, res) => {
