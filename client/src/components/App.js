@@ -5,6 +5,7 @@ import ProductType from "./ProductType";
 import ProductPage from "./ProductPage";
 import Cart from "./Cart";
 import OrderConfirmed from "./OrderConfirmed"
+import Header from "./Header"
 
 
 const App = () => {
@@ -12,12 +13,13 @@ const App = () => {
     return (
         <BrowserRouter>
             <GlobalStyle />
+            <Header />
             <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/type" element={<ProductType />} />
-            <Route path="/product/:productId" element={<ProductPage />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/confirm/:orderId" element={<OrderConfirmed />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/category/:category" element={<ProductType />} />
+                <Route path="/product/:productId" element={<ProductPage />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/confirm/:orderId" element={<OrderConfirmed />} />
             </Routes>  
         </BrowserRouter>
     );
