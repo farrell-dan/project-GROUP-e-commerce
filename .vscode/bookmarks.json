@@ -1,0 +1,19 @@
+{
+	"files": [
+		{
+			"path": "server/BuyItem.js",
+			"bookmarks": [
+				{
+					"line": 70,
+					"column": 3,
+					"label": ""
+				},
+				{
+					"line": 128,
+					"column": 3,
+					"label": "Wherre the loop end, need to check that"
+				}
+			]
+		}
+	]
+}
