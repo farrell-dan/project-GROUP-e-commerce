@@ -18,7 +18,7 @@ const getItemsByCategory = async (req, res) => {
 
         if (items && items.length > 0) {
             res.status(200).json({ status: 200, message: "Here are your items", data: items });
-            console.log(items);
+            // console.log(items);
         } else {
             res.status(404).json({ status: 404, message: `No items found for category: ${category}` });
             console.log(`No items found for category: ${category}`);

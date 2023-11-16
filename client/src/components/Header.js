@@ -6,7 +6,7 @@ const Header = () => {
     return (
             <StyledNavbar>
             <div className="navbar-container">
-                <div className="logo">Store Name</div>
+                <div className="logo">CouncilTech</div>
                 <ul className="nav-links">
                 <li><a href="/">Home</a></li>
                 <li><a href="/Cart">Cart</a></li>
@@ -27,8 +27,9 @@ const StyledNavbar = styled.nav`
   }
 
   .logo {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
+    font-style: italic;
   }
 
   .nav-links {
@@ -40,6 +41,8 @@ const StyledNavbar = styled.nav`
       a {
         text-decoration: none;
         font-weight: normal; 
+        color: black;
+        font-size: 1.25em;
 
         &:hover,
         &.active {
