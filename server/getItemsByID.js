@@ -61,29 +61,32 @@ const getItemByID = async (request, response) => {
 
 //----------DELETE EVERYTHING AFTER THIS LINE AFTER MERGE-----------------------------------------//
 
-
-"use strict";
-
-// build your server here
-
-// consider making one or more handler files to ease the  division of work
+const BuyItem = require("./BuyItem")
 
 const express = require("express");
+const morgan = require("morgan");
 
-//Need to add the updated MONGO_URI to the .env file in server folder
+express()
+    // Below are methods that are included in express(). We chain them for convenience.
+    // --------------------------------------------------------------------------------
 
-const PORT = 8888;
+    // This will give us will log more info to the console. see https://www.npmjs.com/package/morgan
+    .use(morgan("tiny"))
+    .use(express.json())
 
-const app = express();
+    // Any requests for static files will go into the public folder
+    .use(express.static("public"))
 
-app.get("/api/test", (req, res) => {
+.get("/api/test", (req, res) => {
   res.json({ message: "You hit the end point!" });
 })
 
-app.get("/api/getItemById/:_id", getItemByID)
+.get("/api/getItemById/:_id", getItemByID)
+
+.patch("/api/BuyItem", BuyItem)
 
 //test MongoDB get w/ db & collection names used as examples, 
-app.get("/api/testMongo", async (req, res) => {
+.get("/api/testMongo", async (req, res) => {
   const client = new MongoClient(MONGO_URI);
 
   try {
@@ -99,9 +102,10 @@ app.get("/api/testMongo", async (req, res) => {
   } finally {
     await client.close();
   }
-});
+})
 
-app.listen(PORT);
+.listen(8000, () => console.log(`Listening on port 8000`));
+
 
 
 

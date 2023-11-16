@@ -42,62 +42,102 @@ const initialCart = [
 
 // Get a specific item by his ID
 
-const BuyItems = async (request, response) => {
+const BuyItem = async (request, response) => {
+  console.log("REQUESTBODY");
+  console.log(request.body);
+
   const { ItemsInCart } = request.body;
+
+  console.log(ItemsInCart);
 
   if (!ItemsInCart) {
     return response
     .status(401)
-    .json({ status: 401,  message : `You need to provide an array of object with this propriety : ${initialCart} `});
+    .json({ status: 401,  message : `You need to provide an array of object with this propriety : ${{
+      _id : 9999,
+      price : "9999$",
+      numInStock : 0,  
+    }} `});
     }
 
-    //Validating all items in the cart
-  if (ItemsInCart.some(item => !item.id || !item.price || !item.numInStock)) {
+  //Validating all items in the cart
+  if (((ItemsInCart)).some(item => item._id && item.price && item.numInStock)) {
     return response
     .status(401)
     .json({ status: 401,  message : "You need to provide key for each id, price and number of stock for each item to validate the order"});
   }
 
-  for (let index = 0; index < ItemsInCart.length; index++) {
+
+  //Todo //
+  //Work with an array of file multiple file// 
+  //I can just connect one time and make all my test there an 
+  // and push my Same error inside a array. YEAH! 
+  //todo // 
+
+  
     try {
+
+    let itemError = [];
+    let adminItemError = [];
 
       await client.connect();
       const db = client.db(database);
       console.log("connected!");
 
+      for (let index = 0; index < ItemsInCart.length; index++) {
+          const item = ItemsInCart[index];
       //retrieve Id in the database 
-      const item = await db.collection(collectionName).findOne({_id : Number(_id)});
+      const itemFound = await db.collection(collectionName).findOne({_id : Number(item._id)});
 
-      if (!item || item.matchedCount === 0) {
-          return response
+      if (!itemFound || itemFound.matchedCount === 0) {
+        
+        //Add the item that had a problem to the array for admin management
+        adminItemError.push(itemFound);  
+        
+        return response
           .status(404)
-          .json({ status: 404, _id, message : `Item not found, please verify the item Id : ${_id} was not found` });
+          .json({ status: 404, message : `Item not found, please verify the item Id : ${item._id} was not found` });
         } 
       
       if (item.numInStock < 0) {
+         //Add the item that had a problem to the array for admin management
+        itemError.push(itemFound);  
+
         return response
           .status(405)
-          .json({ status: 405, _id, message : `Item ${item.name} not in stock, please choose another item` });
+          .json({ status: 405,  message : `Item ${item.name} not in stock, please choose another item` });
         } 
-      }
+      
 
-      const itemUpdate = await db.collection(collectionName).UpdateOne({_id}, { $inc: { "numInStock" : -1 } })
+      const itemUpdate = await db.collection(collectionName).UpdateOne({_id : item._id}, { $inc: { "numInStock" : -1 } })
       
       if (itemUpdate.matchedCount  === 0 || itemUpdate.modifiedCount) {
+        
+        //Add the item that had a problem to the array for admin management
+        adminItemError.push(itemFound)
+        
         return response
           .status(405)
-          .json({ status: 405, _id, message : `Item noyt updated, there was an error with your order, please try again later` });
-        } 
-      } 
+          .json({ status: 405, message : `Item not updated, there was an error with your order, please try again later` });
+        }  
 
-        //after all test is passed 
+      }
+        //If all test is passed 
+        if (index === ItemsInCart.length && itemError.length < 1) {
         return response
         .status(200)
-        .json({status:200, message : "Item sucessfully found: ", item : item });
+        .json({status:200, message : "Purchased successuf !"});
+        }
+
+        else 
+          if (index === ItemsInCart.length && itemError.length > 0) {
+            return response
+            .status(200)
+            .json({status:401, message : `Some error happen in your cart, please verify the disponibillity of these items ${itemError}`});
+            }
   }
-  
   catch(error) {
-    console.log(error.stack);
+    console.error(error.stack);
     return response
     .status(500)
     .json({status:500, message : " Unexpected Error with the server" });
@@ -106,4 +146,6 @@ const BuyItems = async (request, response) => {
   client.close();
   console.log("disconected!");
     }
-}
+  }
+
+module.exports = BuyItem;
