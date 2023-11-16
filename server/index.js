@@ -5,6 +5,16 @@
 // consider making one or more handler files to ease the  division of work
 
 const express = require("express");
+const morgan = require("morgan");
+
+const {
+  getUniqueCategories,
+  getItemsbyCategory,
+  buyerVerification,
+  buyItem,
+  getItemByID,
+} = require("./handlers")
+
 
 const { MongoClient } = require("mongodb");
 require("dotenv").config();
@@ -15,9 +25,16 @@ const PORT = 8888;
 
 const app = express();
 
+app.use(morgan("tiny"))
+app.use(express.json())
+
 app.get("/api/test", (req, res) => {
   res.json({ message: "You hit the end point!" });
 });
+
+app.get("/api/getItemById/:_id", getItemByID)
+
+app.patch("/api/BuyItem", BuyItem)
 
 //test MongoDB get w/ db & collection names used as examples, 
 app.get("/api/testMongo", async (req, res) => {
@@ -38,4 +55,5 @@ app.get("/api/testMongo", async (req, res) => {
   }
 });
 
-app.listen(PORT);
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
