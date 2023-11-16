@@ -42,6 +42,17 @@ const initialCart = [
 
 // Get a specific item by his ID
 
+
+//todo
+//Get shopping cart from the backend
+//check ID and qty of each compared to the qty order
+//transform it into a promises All
+
+//makebetter/
+//Use updateMany with filter
+
+
+
 const BuyItem = async (request, response) => {
   console.log("REQUESTBODY");
   console.log(request.body);
