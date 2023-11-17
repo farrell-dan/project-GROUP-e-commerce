@@ -96,6 +96,13 @@ const BuyItem = async (request, response) => {
       }
     })
 
+    if (listOfItemAvailableToBuyInDatabase.length < 1) {
+      return response
+      .status(401)
+      .json({status:401, message : "We are sorry to tell you that all the items in your cart is out of stock" })
+    }
+
+
     const PromisesOFUpdatingStock = listOfItemAvailableToBuyInDatabase.map((itemAvailableTobUyInDatabase, index) => {
 
       const updateStock= itemAvailableTobUyInDatabase.numInStock - (cart[index]).quantityBuy;
@@ -111,7 +118,14 @@ const BuyItem = async (request, response) => {
       .json({status:404, message : "An error occured in your order, please contact the client service" })
     }
 
+    //delete old cart
+    const deletedCart = await db.collection("Cart").drop({});
 
+    if (!deletedCart) {
+      return response
+      .status(401)
+      .json({status:401, message : "There was an errro with the deletion of the cart" })
+    }
 
       return response
       .status(200)
