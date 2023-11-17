@@ -8,10 +8,11 @@ const { MONGO_URI } = process.env;
 const addToCart = async (req, res) => {
 
 
-    // Check if "name" is present in the request body
-    if (!req.body.name) {
-      return res.status(400).json({ error: "Name is required in the request body" });
-    }
+
+    // // Check if "name" is present in the request body
+    // if (!req.body.name) {
+    //   return res.status(400).json({ error: "Name is required in the request body" });
+    // }
 
 
   const client = new MongoClient(MONGO_URI);
@@ -52,6 +53,7 @@ const addToCart = async (req, res) => {
       });
       console.log("Cart collection created successfully with the initial item");
     } else {
+      
       // Add a new item to the existing "Carts" collection
       const newItem = {
       _id,
