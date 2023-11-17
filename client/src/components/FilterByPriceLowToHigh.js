@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 
-const category = "Medical"
+const category = "Entartainment"
 
 const FilterByPriceLowToHigh = () => {
 
