@@ -6,6 +6,9 @@ import ProductPage from "./ProductPage";
 import Cart from "./Cart";
 import OrderConfirmed from "./OrderConfirmed"
 import Header from "./Header"
+import FilterByPriceLowToHigh from "./FilterByPriceLowToHigh"
+
+
 
 
 const App = () => {
@@ -18,6 +21,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/category/:category" element={<ProductType />} />
                 <Route path="/product/:productId" element={<ProductPage />} />
+                <Route path="/product/sorting" element={<FilterByPriceLowToHigh/>} />                
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/confirm/:orderId" element={<OrderConfirmed />} />
             </Routes>  
