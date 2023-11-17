@@ -13,7 +13,8 @@ const {
   buyerVerification,
   buyItem,
   getItemByID,
-  addToCart
+  addToCart,
+  showCart
 } = require("./handlers")
 
 
@@ -46,12 +47,13 @@ app.get("/api/getItemById/:_id", getItemByID)
 
 app.get("/api/BuyItem", buyItem)
 
+app.get("/api/cart", showCart)
+
 app.post("/api/validateCard", buyerVerification)
 
 //test MongoDB get w/ db & collection names used as examples, 
 app.get("/api/testMongo", async (req, res) => {
   const client = new MongoClient(MONGO_URI);
-
   try {
     await client.connect();
     const result = await client
