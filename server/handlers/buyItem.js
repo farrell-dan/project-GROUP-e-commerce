@@ -3,6 +3,7 @@
 
 "use strict";
 
+const { request } = require("express");
 const { MongoClient } = require("mongodb");
 
 require("dotenv").config();
@@ -24,11 +25,10 @@ const database = "ECommerceWebsite"
 // },
 
 
-const initialCart = [
+const Cart = [
 {
   _id : 9999,
-  price : "9999$",
-  numInStock : 0,  
+  quantityBuy : 0,  
 }
 ]
 
@@ -52,111 +52,189 @@ const initialCart = [
 //Use updateMany with filter
 
 
+//todo
 
 const BuyItem = async (request, response) => {
-  console.log("REQUESTBODY");
-  console.log(request.body);
 
-  const { ItemsInCart } = request.body;
+  const { cart } = request.body;
 
-  console.log(ItemsInCart);
+  const itemsOutOfStock = [];
 
-  if (!ItemsInCart) {
+  if (!cart) {
     return response
     .status(401)
     .json({ status: 401,  message : `You need to provide an array of object with this propriety : ${{
       _id : 9999,
-      price : "9999$",
-      numInStock : 0,  
+      quantityBuy : 0,    
     }} `});
     }
 
-  //Validating all items in the cart
-  if (((ItemsInCart)).some(item => item._id && item.price && item.numInStock)) {
-    return response
-    .status(401)
-    .json({ status: 401,  message : "You need to provide key for each id, price and number of stock for each item to validate the order"});
-  }
 
 
-  //Todo //
-  //Work with an array of file multiple file// 
-  //I can just connect one time and make all my test there an 
-  // and push my Same error inside a array. YEAH! 
-  //todo // 
 
-  
     try {
-
-    let itemError = [];
-    let adminItemError = [];
 
       await client.connect();
       const db = client.db(database);
       console.log("connected!");
 
-      for (let index = 0; index < ItemsInCart.length; index++) {
-          const item = ItemsInCart[index];
-      //retrieve Id in the database 
-      const itemFound = await db.collection(collectionName).findOne({_id : Number(item._id)});
+    //Getting all the items in the cart
+    const getAllItemFromDatabase = cart.map(itemInCart => {
+      return db.collection(collectionName).findOne({_id : Number(itemInCart._id)});
+    })
 
-      if (!itemFound || itemFound.matchedCount === 0) {
-        
-        //Add the item that had a problem to the array for admin management
-        adminItemError.push(itemFound);  
-        
-        return response
-          .status(404)
-          .json({ status: 404, message : `Item not found, please verify the item Id : ${item._id} was not found` });
-        } 
-      
-      if (item.numInStock < 0) {
-         //Add the item that had a problem to the array for admin management
-        itemError.push(itemFound);  
+    const allItemFoundInDatabase = await Promise.all(getAllItemFromDatabase);
 
-        return response
-          .status(405)
-          .json({ status: 405,  message : `Item ${item.name} not in stock, please choose another item` });
-        } 
-      
+    if(allItemFoundInDatabase.some(item => !item)) {
+      return response
+      .status(404)
+      .json({status:404, message : "some item were not found, please verify the id of each item in the cart" })
+    }
 
-      const itemUpdate = await db.collection(collectionName).UpdateOne({_id : item._id}, { $inc: { "numInStock" : -1 } })
-      
-      if (itemUpdate.matchedCount  === 0 || itemUpdate.modifiedCount) {
-        
-        //Add the item that had a problem to the array for admin management
-        adminItemError.push(itemFound)
-        
-        return response
-          .status(405)
-          .json({ status: 405, message : `Item not updated, there was an error with your order, please try again later` });
-        }  
+    const listOfItemAvailableToBuy = allItemFoundInDatabase.map((itemFoundInDatabase, index) => {
+      console.log((cart[index]).quantityBuy);
+      console.log(itemFoundInDatabase.numInStock);
 
-      }
-        //If all test is passed 
-        if (index === ItemsInCart.length && itemError.length < 1) {
-        return response
-        .status(200)
-        .json({status:200, message : "Purchased successuf !"});
-        }
+      if (itemFoundInDatabase.numInStock < (cart[index]).quantityBuy) {
+        itemsOutOfStock.push(itemFoundInDatabase);
+      }else {
+        return itemFoundInDatabase
+      }      
+    })
 
-        else 
-          if (index === ItemsInCart.length && itemError.length > 0) {
-            return response
-            .status(200)
-            .json({status:401, message : `Some error happen in your cart, please verify the disponibillity of these items ${itemError}`});
-            }
+    
+
+    //filter throught the Array, if some value === null that means that i didn't go through
+  
+    
+
+    
+      return response
+      .status(200)
+      .json({status:200, message : "purchase sucessful", data: allItemFoundInDatabase, itemsOutOfStock : itemsOutOfStock });
   }
+
   catch(error) {
     console.error(error.stack);
     return response
     .status(500)
-    .json({status:500, message : " Unexpected Error with the server" });
+    .json({status:500, message : " Unexpected Error with the server", itemsOutOfStock: itemsOutOfStock });
   
   } finally {
   client.close();
   console.log("disconected!");
     }
-  }
+}
+
+
+// const BuyItem = async (request, response) => {
+
+//   const { ItemsInCart } = request.body;
+
+//   console.log(ItemsInCart);
+
+//   if (!ItemsInCart) {
+//     return response
+//     .status(401)
+//     .json({ status: 401,  message : `You need to provide an array of object with this propriety : ${{
+//       _id : 9999,
+//       price : "9999$",
+//       numInStock : 0,  
+//     }} `});
+//     }
+
+//   //Validating all items in the cart
+//   if (((ItemsInCart)).some(item => !item._id || !item.price || !item.numInStock)) {
+//     return response
+//     .status(401)
+//     .json({ status: 401,  message : "You need to provide key for each id, price and number of stock for each item to validate the order"});
+//   }
+
+//   //Todo //
+//   //Work with an array of file multiple file// 
+//   //I can just connect one time and make all my test there an 
+//   // and push my Same error inside a array. YEAH! 
+//   //todo // 
+
+  
+//     try {
+
+//     let itemError = [];
+//     let adminItemError = [];
+
+//       await client.connect();
+//       const db = client.db(database);
+//       console.log("connected!");
+
+//       for (let index = 0; index < ItemsInCart.length; index++) {
+      
+//       const item = ItemsInCart[index];
+//       //retrieve Id in the database 
+//       const itemFound = await db.collection(collectionName).findOne({_id : Number(item._id)});
+
+//       if (!itemFound || itemFound.matchedCount === 0) {
+        
+//         //Add the item that had a problem to the array for admin management
+//         adminItemError.push(itemFound);  
+        
+//         return response
+//           .status(404)
+//           .json({ status: 404, message : `Item not found, please verify the item Id : ${item._id} was not found` });
+//         } 
+      
+//       //todo 
+//       //compare to the item im asking for (key of cart)
+
+//       if (item.numInStock <= 0) {
+//          //Add the item that had a problem to the array for admin management
+//         itemError.push(itemFound);  
+
+//         return response
+//           .status(405)
+//           .json({ status: 405,  message : `Item ${item.name} not in stock, please choose another item` });
+//         } 
+      
+//       //todo 
+
+//       //pu al of this into a second lop, to avoid modify inventory before checkingall items in cart
+
+//       const itemUpdate = await db.collection(collectionName).UpdateOne({_id : item._id}, { $inc: { "numInStock" : -1 } })
+      
+//       if (itemUpdate.matchedCount  === 0 || itemUpdate.modifiedCount) {
+        
+//         //Add the item that had a problem to the array for admin management
+//         adminItemError.push(itemFound)
+        
+//         return response
+//           .status(405)
+//           .json({ status: 405, message : `Item not updated, there was an error with your order, please try again later` });
+//         }  
+
+//       }
+//         //If all test is passed 
+//         if (index === ItemsInCart.length && itemError.length < 1) {
+//         return response
+//         .status(200)
+//         .json({status:200, message : "Purchased successuf !"});
+//         }
+
+//         else 
+//           if (index === ItemsInCart.length && itemError.length > 0) {
+//             return response
+//             .status(200)
+//             .json({status:401, message : `Some error happen in your cart, please verify the disponibillity of these items ${itemError}`});
+//             }
+//   }
+//   catch(error) {
+//     console.error(error.stack);
+//     return response
+//     .status(500)
+//     .json({status:500, message : " Unexpected Error with the server" });
+  
+//   } finally {
+//   client.close();
+//   console.log("disconected!");
+//     }
+//   }
 
 module.exports = BuyItem;
