@@ -44,7 +44,9 @@ app.post("/api/addToCart", addToCart)
 
 app.get("/api/getItemById/:_id", getItemByID)
 
-app.patch("/api/BuyItem", buyItem)
+app.get("/api/BuyItem", buyItem)
+
+app.post("/api/validateCard", buyerVerification)
 
 //test MongoDB get w/ db & collection names used as examples, 
 app.get("/api/testMongo", async (req, res) => {

@@ -8,10 +8,11 @@ const { MONGO_URI } = process.env;
 const addToCart = async (req, res) => {
 
 
-    // Check if "name" is present in the request body
-    if (!req.body.name) {
-      return res.status(400).json({ error: "Name is required in the request body" });
-    }
+
+    // // Check if "name" is present in the request body
+    // if (!req.body.name) {
+    //   return res.status(400).json({ error: "Name is required in the request body" });
+    // }
 
 
   const client = new MongoClient(MONGO_URI);
@@ -25,35 +26,23 @@ const addToCart = async (req, res) => {
 
     // Check if "Carts" collection exists
     const collectionExists = await db
-      .listCollections({ name: "Carts" })
+      .listCollections({ name: "Cart" })
       .hasNext(); //check if there is at least one more item in the results set
 
     // Get item details from the request body
     const {
       _id,
-      name,
-      price,
-      body_location,
-      category,
-      imageSRC,
-      quantity,
-      companyid,
+      quantityBuy
     } = req.body;
 
     if (!collectionExists) {
       // Create a new collection for carts
-      const cartsCollection = await db.createCollection("Carts");
+      const cartsCollection = await db.createCollection("Cart");
 
       // Add an initial item to the collection
       const initialCartItem = {
-        name,
-        price,
-        body_location,
-        _id,
-        category,
-        imageSRC,
-        quantity,
-        companyid,
+      _id,
+      quantityBuy
       };
 
       // Insert the initial item into the "Carts" collection
@@ -64,20 +53,15 @@ const addToCart = async (req, res) => {
       });
       console.log("Cart collection created successfully with the initial item");
     } else {
+      
       // Add a new item to the existing "Carts" collection
       const newItem = {
-        name,
-        price,
-        _id,
-        body_location,
-        category,
-        imageSRC,
-        quantity,
-        companyid,
+      _id,
+      quantityBuy
       };
 
       // Insert the new item into the "Carts" collection
-      await db.collection("Carts").insertOne(newItem);
+      await db.collection("Cart").insertOne(newItem);
       res.status(201).json({
         message: "Item added to the existing cart successfully",
         data: newItem,
