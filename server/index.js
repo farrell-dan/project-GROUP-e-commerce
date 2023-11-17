@@ -13,6 +13,7 @@ const {
   buyerVerification,
   buyItem,
   getItemByID,
+  addToCart
 } = require("./handlers")
 
 
@@ -32,7 +33,14 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "You hit the end point!" });
 });
 
+//Can use for the homepage to get the 7 unique categories
+app.get("/api/Categories" ,getUniqueCategories)
+
+//Used to get all the items of one category
 app.get("/api/getItemsByCategory/:category", getItemsbyCategory)
+
+//Add Items to Car
+app.post("/api/addToCart", addToCart)
 
 app.get("/api/getItemById/:_id", getItemByID)
 
