@@ -2,7 +2,8 @@
 
 
 
-const BuyerVerification = (firstName, lastName, creditCardNumber, expiration) => {
+const BuyerVerification = async (request, response) => {
+
 
   //RegEx to test if variable contains only number
   const testVisaNumber =  new RegExp ( /^\d+$/);
@@ -10,7 +11,9 @@ const BuyerVerification = (firstName, lastName, creditCardNumber, expiration) =>
   //Regex to test if variable contains only date in this format : 25/04
   const testVisaExpirationDate = new RegExp(/^\d{1,2}\/{1}\d{1,2}$/);
 
+  const {firstName, lastName, creditCardNumber, expiration} = request.body;
 
+  try {
 
   if (!firstName || !lastName || !creditCardNumber || !expiration) {
     return response
@@ -35,5 +38,14 @@ const BuyerVerification = (firstName, lastName, creditCardNumber, expiration) =>
   .json({status:200, message : "Credit card validation sucessessfull" })
 
 }
+
+catch(error) {
+  console.error(error.stack);
+  return response
+  .status(500)
+  .json({status:500, message : " Unexpected Error with the server" });
+
+} 
+  }
 
 module.exports = BuyerVerification;
