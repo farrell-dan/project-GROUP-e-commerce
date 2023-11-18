@@ -63,7 +63,7 @@ const showAll = () => {
 
 return (
   <Element>
-      {loading ? (
+      {loading && !items || !items ? (
           <CircularProgress />
       ) : (
         <>

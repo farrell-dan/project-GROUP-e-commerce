@@ -44,9 +44,15 @@ const Cart = () => {
           ) : (
             <>
               <ItemContainer>
-                  {cart.map((item) => (
+                {
+                  !cart ? (
+                  <h1> You cart is empty</h1>) : (
+                    
+                  cart.map((item) => (
                       <ItemCard key={item.id} item={item} />
-                  ))}
+                  ))
+                  )
+              }
               </ItemContainer>
             <button onClick={BuyItem}>Buy Items</button>
             </>

@@ -4,6 +4,7 @@ const buyerVerification = require("./handlers/buyerVerification")
 const buyItem = require("./handlers/buyItem")
 const getItemByID = require("./handlers/getItemByID");
 const addToCart = require("./handlers/addToCart")
+const showCart = require("./handlers/showCart")
 
 
 module.exports = {
@@ -12,5 +13,6 @@ module.exports = {
     buyerVerification,
     buyItem,
     getItemByID,
-    addToCart
+    addToCart,
+    showCart
 }
