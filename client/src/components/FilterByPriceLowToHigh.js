@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 
-const category = "Entartainment"
+const category = "Medical"
 
 const FilterByPriceLowToHigh = () => {
 
@@ -63,7 +63,7 @@ const showAll = () => {
 
 return (
   <Element>
-      {loading ? (
+      {loading && !items || !items ? (
           <CircularProgress />
       ) : (
         <>
