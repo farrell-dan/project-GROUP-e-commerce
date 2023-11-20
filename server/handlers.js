@@ -5,6 +5,7 @@ const buyItem = require("./handlers/buyItem")
 const getItemByID = require("./handlers/getItemByID");
 const addToCart = require("./handlers/addToCart")
 const showCart = require("./handlers/showCart")
+const deleteItemFromCart = require("./handlers/deleteItemFromCart")
 
 
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
     buyItem,
     getItemByID,
     addToCart,
-    showCart
+    showCart,
+    deleteItemFromCart
 }
