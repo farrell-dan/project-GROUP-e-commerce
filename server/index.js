@@ -14,7 +14,8 @@ const {
   buyItem,
   getItemByID,
   addToCart,
-  showCart
+  showCart,
+  deleteItemFromCart
 } = require("./handlers")
 
 
@@ -48,6 +49,8 @@ app.get("/api/getItemById/:_id", getItemByID)
 app.get("/api/BuyItem", buyItem)
 
 app.get("/api/cart", showCart)
+
+app.delete("/api/deleteItemFromCart", deleteItemFromCart)
 
 app.post("/api/validateCard", buyerVerification)
 

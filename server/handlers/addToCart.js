@@ -6,10 +6,6 @@ const { MONGO_URI } = process.env;
 
 // Function to create a new collection for carts with an initial item or add an item to an existing cart
 const addToCart = async (req, res) => {
-  // // Check if "name" is present in the request body
-  // if (!req.body.name) {
-  //   return res.status(400).json({ error: "Name is required in the request body" });
-  // }
 
   const client = new MongoClient(MONGO_URI);
 
