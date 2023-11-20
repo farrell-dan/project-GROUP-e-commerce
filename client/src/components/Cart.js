@@ -49,7 +49,7 @@ const Cart = () => {
                   <h1> You cart is empty</h1>) : (
                     
                   cart.map((item) => (
-                      <ItemCard key={item.id} item={item} />
+                      <ItemCard key={item._id} item={item} />
                   ))
                   )
               }
@@ -63,14 +63,15 @@ const Cart = () => {
 
 const ItemCard = ({ item }) => {
   return (
-      <StyledLink to={`/product/${item.id}`} key={item.id}>
+      <StyledLink to={`/product/${item._id}`} key={item._id}>
           <Card>
               <ItemInfo>
                   <ImgDiv>
                       <ItemImage src={item.imageSrc} />
                   </ImgDiv>
                   <h3>{item.name}</h3>
-                  <p>{item.price}</p>
+                  <p> Price : {item.price}</p>
+                  <p>Qty : {item.quantityBuy}</p>
               </ItemInfo>
           </Card>
       </StyledLink>
@@ -87,6 +88,7 @@ const ItemInfo = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  justify-content: flex-start;
   margin-left: 20px; 
   width: 100%;
   height: 100%;
