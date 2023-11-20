@@ -87,7 +87,8 @@ cart && (subTotal = cart.reduce((sum, item) => {
               </div>
               </OrderInformation>
               <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>
-              {errorMessage && <UserMessage>{errorMessage}</UserMessage>}
+              {errorMessage && <UserMessage>{errorMessage}</UserMessage>} 
+              {/* // : navigate("checkoutPage")} */}
             </OrderSummary>
             </PageContainer>
           )}

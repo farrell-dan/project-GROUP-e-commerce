@@ -23,6 +23,7 @@ const App = () => {
                 <Route path="/product/:productId" element={<ProductPage />} />
                 <Route path="/product/sorting" element={<FilterByPriceLowToHigh/>} />                
                 <Route path="/cart" element={<Cart />} />
+                {/* <Route path="/CheckoutPage" element={Checkout}/> */}
                 <Route path="/confirm/:orderId" element={<OrderConfirmed />} />
             </Routes>  
         </BrowserRouter>
