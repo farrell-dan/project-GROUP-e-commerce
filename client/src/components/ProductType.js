@@ -76,7 +76,7 @@ const ProductType = () => {
 
 const ItemCard = ({ item }) => {
     return (
-        <StyledLink to={`/product/${item.id}`} key={item.id}>
+        <StyledLink to={`/product/${item._id}`} key={item.id}>
             <Card>
                 <ItemInfo>
                     <ImgDiv>

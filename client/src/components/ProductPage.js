@@ -7,20 +7,20 @@ const ProductPage = () => {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
-    const { productId } = useParams();
+    const  _id  = useParams()._id;
 
     useEffect(() => {
-    fetch(`/api/getItemById/${productId}`)
+    fetch(`/api/getItemById/${_id}`)
     .then((response) => response.json())
     .then((data) => {
-        setProduct(data);
+        setProduct(data.data);
         setLoading(false);
     })
     .catch((error) => {
-        console.error(`Error fetching product details for ID ${productId}:`, error);
+        console.error(`Error fetching product details for ID ${_id}:`, error);
         setLoading(false);
     });
-}, [productId]);
+}, [_id]);
 
 const handleQuantityChange = (event) => {
     const newQuantity = parseInt(event.target.value, 10);
@@ -29,7 +29,7 @@ const handleQuantityChange = (event) => {
 
 return (
     <Element>
-    {loading ? (
+    {loading && !product ? (
         <CircularProgress />
     ) : (
         <ProductDetails
@@ -62,17 +62,18 @@ const handleAddToCart = async () => {
     });
 };
 
+
 return (
     <DetailContainer>
     <ImgDiv>
-        <ItemImage src={product.item.imageSrc} alt={product.item.name} />
+        <ItemImage src={product.imageSrc} alt={product.name} />
     </ImgDiv>
     <ItemInfo>
-        <h3>{product.item.name}</h3>
-        <p>{product.item.description}</p>
-        <h4>Price: {product.item.price}</h4>
-        <h4>Category: {product.item.category}</h4>
-        <h4>body_location: {product.item.body_location}</h4>
+        <h3>{product.name}</h3>
+        <p>{product.description}</p>
+        <h4>Price: {product.price}</h4>
+        <h4>Category: {product.category}</h4>
+        <h4>body Location: {product.body_location}</h4>
         <QuantityContainer>
         <label>Quantity:</label>
         <QuantityInput
