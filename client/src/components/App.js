@@ -6,7 +6,6 @@ import ProductPage from "./ProductPage";
 import Cart from "./Cart";
 import OrderConfirmed from "./OrderConfirmed"
 import Header from "./Header"
-import FilterByPriceLowToHigh from "./FilterByPriceLowToHigh"
 
 
 
