@@ -71,6 +71,8 @@ return (
         <h3>{product.item.name}</h3>
         <p>{product.item.description}</p>
         <h4>Price: {product.item.price}</h4>
+        <h4>Category: {product.item.category}</h4>
+        <h4>body_location: {product.item.body_location}</h4>
         <QuantityContainer>
         <label>Quantity:</label>
         <QuantityInput
