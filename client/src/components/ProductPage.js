@@ -72,6 +72,7 @@ const handleAddToCart = async () => {
     })
     .then((response) => response.json())
     .then((data) => {
+        //this needs to be corrected. It console.logs "error" if it is successful.
         console.log(data.message);
         if (data.message !== "Item added to the cart successfully") {
         console.log("error");
