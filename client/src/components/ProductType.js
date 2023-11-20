@@ -7,7 +7,9 @@ const ProductType = () => {
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState([]);
     const { category } = useParams();
+    const [filterUse, SetFilterUse] = useState("Sort By")
     const navigate = useNavigate();
+
 
     useEffect(() => {
         fetch(`/api/getItemsByCategory/${category}`)
@@ -23,16 +25,50 @@ const ProductType = () => {
 
     }, [category]);
 
+    const filter = (event) => {
+        const filterChoose = event.target.value;
+    
+        console.log(filterChoose);
+    
+        if (filterChoose === "Price:low to High" ) {
+            const sortItems = items.slice().sort((a, b) => {
+              return (Number((a.price).slice(1))) - (Number((b.price).slice(1)));
+            });
+            setItems(sortItems);
+            SetFilterUse("Price:low to High")
+        }
+        if (filterChoose === "Price:High To low" ) {
+          
+            const sortItems = items.slice().sort((a, b) => {
+              return ((Number((b.price).slice(1)) - Number((a.price).slice(1))));
+            });
+  
+            console.log("SORTING");
+            setItems(sortItems);
+            SetFilterUse("Price:High To low")
+          };
+        }
+
     return (
         <Element>
             {loading ? (
                 <CircularProgress />
+                
             ) : (
+                <>
+            <SortingSelector>
+                <select onChange={(event)=> filter(event)} value={filterUse}>
+                <option>Sort by</option>
+                <option value="Price:low to High">Price: Low to High</option>
+                <option value="Price:High To low">Price: High To low</option>
+                </select>
+            </SortingSelector>
                 <ItemContainer>
                     {items.map((item) => (
                         <ItemCard key={item.id} item={item} />
                     ))}
                 </ItemContainer>
+                </>
             )}
         </Element>
     );
@@ -116,9 +152,16 @@ const Element = styled.div`
     margin-top: 40px;
     margin-left: 30px;
     margin-right: auto;
-    
+`
 
+const SortingSelector = styled.div`
+margin-top:100px;
+margin-bottom: 75px;
+margin-left:70px;
 
+select, option{
+font-size: 1.17rem;
+}
 `
 
 export default ProductType;
