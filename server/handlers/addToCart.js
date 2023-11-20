@@ -62,8 +62,8 @@ const addToCart = async (req, res) => {
       // If the cart exists, check if the item already exists
       const result = await cartsCollection.findOneAndUpdate(
         { _id },
-        { $inc: { quantityBuy: quantityBuy } },
-        { returnDocument: "after" }
+        { $set: { quantityBuy: quantityBuy } },
+        { returnDocument: 'after' }
       );
 
       if (result) {

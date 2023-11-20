@@ -2,19 +2,13 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-
-
+import OrderSummary from "./OrderSummary"
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Cart = () => {
 
   const [loading, setLoading] = useState(true);
     const [cart, setCart] = useState([]);
-    const [cartBuy, setCartBuy] = useState([]);
-    const [itemBuy, SetitemBuy] = useState([]);
-    const [buying, SetBuying] = useState(false)
-    const [errorMessage, SetErrorMessage] = useState(null);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`/api/cart/`)
@@ -29,33 +23,6 @@ const Cart = () => {
             });
     }, []);
     
-    const BuyItem = () => {
-      SetBuying(true)
-      fetch(`/api/BuyItem`)
-      .then((response) => response.json())
-      .then((data) => {
-
-        if (data.message !== "purchase successful") {
-          SetErrorMessage(data.message);
-        } else {
-          setCartBuy(data.data);
-          SetBuying(false)
-        }
-      })
-      .catch((error) => {
-          console.error(`Error fetching items from the cart`, error);
-      });
-
-      navigate("/cart")
-    }
-
-let subTotal = 0;
-
-cart && (subTotal = cart.reduce((sum, item) => {
-  return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
-  },0)
-)
-
     return (
       <Element>
           {loading ? (
@@ -67,49 +34,76 @@ cart && (subTotal = cart.reduce((sum, item) => {
                   !cart ? (
                   <h1> You cart is empty</h1>) : (  
                   cart.map((item) => (
-                      <ItemCard key={item._id} item={item} />
+                      <ItemCard key={item._id} item={item} cart={cart} setCart={setCart}/>
                   ))
                   )
               }
               </ItemContainer>
-              <OrderSummary>
-              <h1>Order Summary</h1>
-              <OrderInformation>
-              <div>  
-              <p>Subtotal :</p>
-              <p>Estimated Shipping:</p>
-              <p>Estimated Total : </p>
-              </div>
-              <div style={{textAlign:"right"}}>
-              <p>{Math.round(subTotal*100)/100} $ </p>
-              <p>20.99 $</p>
-              <p>{Math.round(subTotal * 1.15625) + 20.99} $</p>
-              </div>
-              </OrderInformation>
-              <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>
-              {errorMessage && <UserMessage>{errorMessage}</UserMessage>} 
-              {/* // : navigate("checkoutPage")} */}
-            </OrderSummary>
+              <OrderSummary cart={cart}/>
             </PageContainer>
           )}
       </Element>
   );
 };
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({setCart, item}) => {
+
+  const [ModifiedQuantity, SetModifiedQuantity] = useState(item.quantityBuy);
+
+  const ModifyQuantity = () => {
+    
+    fetch("/api/addToCart", {
+      method:"POST",
+      headers: {
+      Accept : "application/json",
+      "Content-Type" : "application/json",
+    },
+    body:JSON.stringify({_id : item._id, quantityBuy : ModifiedQuantity})
+  })
+  .then((response) => response.json())
+  .then(data => {
+    console.log(data);
+  })
+
+      fetch(`/api/cart/`)
+        .then((response) => response.json())
+        .then((data) => {
+            setCart(data.data);
+        })
+        .catch((error) => {
+            console.error(`Error fetching items from the cart`, error);
+        });
+}
+
+  const add = () => {
+    SetModifiedQuantity(ModifiedQuantity + 1)
+  }
+
+  const remove = () => {
+    if(ModifiedQuantity > 1) {
+      SetModifiedQuantity(ModifiedQuantity - 1)
+    }     
+  }
+  
   return (
-      <StyledLink to={`/product/${item._id}`} key={item._id}>
           <Card>
               <ItemInfo>
                   <ImgDiv>
-                      <ItemImage src={item.imageSrc} />
+                    <StyledLink to={`/product/${item._id}`} key={item._id}>
+                        <ItemImage src={item.imageSrc} />
+                    </StyledLink>
                   </ImgDiv>
                   <h3>{item.name}</h3>
                   <p> Price : {item.price}</p>
-                  <p>Qty : {item.quantityBuy}</p>
+                  <div style={{display:"flex"}}>
+                  <button onClick={add}>+</button>
+                  <p>Quantity : {(item.numInStock < 1) ? "OutOfStock" : (ModifiedQuantity || item.quantityBuy)} </p>
+                  <button onClick={remove}>-</button>
+                  <button className="update" onClick={ModifyQuantity}>Update</button>
+                  </div>
+                  <button className="fullSize" ><DeleteIcon/></button>
               </ItemInfo>
           </Card>
-      </StyledLink>
   );
 };
 
@@ -127,6 +121,24 @@ const ItemInfo = styled.div`
   margin-left: 20px; 
   width: 100%;
   height: 100%;
+
+  button {
+  height:50%;
+  margin: auto;
+  align-self: center;
+  width:10%;
+}
+
+.update{
+  width:35%;
+  margin-left: 2%;
+}
+
+.fullSize {
+  width:20%;
+  margin-right:85%;
+}
+
 `;
 
 const ImgDiv = styled.div`
@@ -164,38 +176,7 @@ const Card = styled.div`
   }
 `;
 
-const OrderSummary = styled.div`
-display: flex;
-flex-direction: column;
-padding:20px 40px;
-margin: 20px;
-width: 75%;
-height: 100%;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-border: solid black;
-border-radius: 10px;
-`
 
-const OrderInformation = styled.div`
-display: grid;
-grid-template-columns:1fr 1fr;
-grid-gap: 50%;
-`
-
-const CheckoutButton = styled.button`
-width:75%;
-text-align: center;
-align-self: center;
-border-radius: 15px;
-margin:20px;
-padding:10px;
-font-size: 1.5em;
-outline: auto;
-`
-
-const UserMessage = styled.p`
-
-`
 
 const PageContainer = styled.div`
 display : flex;
