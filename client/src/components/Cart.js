@@ -13,6 +13,7 @@ const Cart = () => {
     const [itemBuy, SetitemBuy] = useState([]);
     const [buying, SetBuying] = useState(false)
     const [errorMessage, SetErrorMessage] = useState(null);
+    const [quantityBuy, SetQuantityBuy] = useState(1);
 
     const navigate = useNavigate();
 
@@ -67,7 +68,7 @@ cart && (subTotal = cart.reduce((sum, item) => {
                   !cart ? (
                   <h1> You cart is empty</h1>) : (  
                   cart.map((item) => (
-                      <ItemCard key={item._id} item={item} />
+                      <ItemCard key={item._id} item={item} quantityBuy={quantityBuy} SetQuantityBuy={SetQuantityBuy} />
                   ))
                   )
               }
@@ -86,7 +87,8 @@ cart && (subTotal = cart.reduce((sum, item) => {
               <p>{Math.round(subTotal * 1.15625) + 20.99} $</p>
               </div>
               </OrderInformation>
-              <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>
+              {cart &&
+              <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>}
               {errorMessage && <UserMessage>{errorMessage}</UserMessage>} 
               {/* // : navigate("checkoutPage")} */}
             </OrderSummary>
@@ -96,20 +98,47 @@ cart && (subTotal = cart.reduce((sum, item) => {
   );
 };
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, quantityBuy, SetQuantityBuy }) => {
+  
+  const ModifyQuantity = (_id, quantityBuy) => {
+    fetch("/api/addToCart", {
+      method:"POST",
+      headers: {
+      Accept : "application/json",
+      "Content-Type" : "application/json",
+    },
+    body:JSON.stringify({_id, quantityBuy})
+  })
+  .then((response) => response.json())
+  .then(data => {
+    console.log(data);
+  })
+    }
+
+  const add = () => {
+    SetQuantityBuy(quantityBuy + 1)
+  }
+
+  const remove = () => {
+    SetQuantityBuy(quantityBuy - 1)
+  }
+  
   return (
-      <StyledLink to={`/product/${item._id}`} key={item._id}>
+      
           <Card>
               <ItemInfo>
                   <ImgDiv>
-                      <ItemImage src={item.imageSrc} />
+                    <StyledLink to={`/product/${item._id}`} key={item._id}>
+                        <ItemImage src={item.imageSrc} />
+                    </StyledLink>
                   </ImgDiv>
                   <h3>{item.name}</h3>
                   <p> Price : {item.price}</p>
-                  <p>Qty : {item.quantityBuy}</p>
+                  <button onClick={add}>+</button>
+                  <input type="text" onChange={() => ModifyQuantity(item._id, quantityBuy)} value={quantityBuy}></input>
+                  <button onClick={remove}>-</button>
               </ItemInfo>
           </Card>
-      </StyledLink>
   );
 };
 
