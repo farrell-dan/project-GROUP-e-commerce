@@ -157,8 +157,8 @@ const QuantityContainer = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     justify-content: flex-end;
+    margin-right: 10px;
     label {
-        margin-right: 10px;
         margin-right: 10px;
     }
 `;
