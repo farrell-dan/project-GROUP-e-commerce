@@ -10,8 +10,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
     const [cart, setCart] = useState([]);  
 
-    const navigate = useNavigate();
-
     useEffect(() => {
         fetch(`/api/cart/`)
             .then((response) => response.json())
@@ -82,7 +80,9 @@ const ItemCard = ({setCart, item}) => {
   }
 
   const remove = () => {
-    SetModifiedQuantity(ModifiedQuantity - 1)
+    if(ModifiedQuantity > 1) {
+      SetModifiedQuantity(ModifiedQuantity - 1)
+    }     
   }
   
   return (

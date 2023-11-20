@@ -10,7 +10,6 @@ const OrderSummary = ({cart}) => {
   const [errorMessage, SetErrorMessage] = useState(null);
   const [buying, SetBuying] = useState(false);
   const [newCart, setNewcart] = useState(cart);
-  
 
   let subTotal = 0;
 
@@ -28,15 +27,12 @@ const OrderSummary = ({cart}) => {
       if (data.message !== "purchase successful") {
         SetErrorMessage(data.message);
       } else {
-        setCartBuy(data.data);
         SetBuying(false)
       }
     })
     .catch((error) => {
         console.error(`Error fetching items from the cart`, error);
     });
-
-    navigate("/cart")
   }
 
               return (
@@ -73,7 +69,6 @@ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 border: solid black;
 border-radius: 10px;
 `
-
 
 const OrderInformation = styled.div`
 display: grid;
