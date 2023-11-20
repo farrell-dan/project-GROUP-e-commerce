@@ -32,28 +32,6 @@ const Cart = [
 }
 ]
 
-// "validating qty"
-
-// Other route :
-// "validating user name"
-// "validating user last name"
-// "validating Visa Number"
-// "validating Visa expiration"
-
-// Get a specific item by his ID
-
-
-//todo
-//Get shopping cart from the backend
-//check ID and qty of each compared to the qty order
-//transform it into a promises All
-
-//makebetter/
-//Use updateMany with filter
-
-
-
-
 const BuyItem = async (request, response) => {
 
   const itemsOutOfStock = [];
@@ -129,7 +107,7 @@ const BuyItem = async (request, response) => {
 
       return response
       .status(200)
-      .json({status:200, message : "purchase sucessful", itemInStock: listOfItemAvailableToBuyInDatabase , itemsOutOfStock : itemsOutOfStock });
+      .json({status:200, message : "purchase successful", itemInStock: listOfItemAvailableToBuyInDatabase , itemsOutOfStock : itemsOutOfStock });
   }
 
   catch(error) {

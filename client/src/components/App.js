@@ -6,13 +6,9 @@ import ProductPage from "./ProductPage";
 import Cart from "./Cart";
 import OrderConfirmed from "./OrderConfirmed"
 import Header from "./Header"
-import FilterByPriceLowToHigh from "./FilterByPriceLowToHigh"
-
-
 
 
 const App = () => {
-    
     return (
         <BrowserRouter>
             <GlobalStyle />
@@ -20,9 +16,9 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/category/:category" element={<ProductType />} />
-                <Route path="/product/:productId" element={<ProductPage />} />
-                <Route path="/product/sorting" element={<FilterByPriceLowToHigh/>} />                
+                <Route path="/product/:productId" element={<ProductPage />} />          
                 <Route path="/cart" element={<Cart />} />
+                {/* <Route path="/CheckoutPage" element={Checkout}/> */}
                 <Route path="/confirm/:orderId" element={<OrderConfirmed />} />
             </Routes>  
         </BrowserRouter>

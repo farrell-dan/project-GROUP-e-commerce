@@ -33,15 +33,20 @@ const showCart = async (request, response) => {
 
     const allItemFoundInDatabase = await Promise.all(getAllItemFromDatabase);
 
+
     if(allItemFoundInDatabase.some(item => !item)) {
       return response
       .status(404)
       .json({status:404, message : "some item were not found, please verify the id of each item in the cart" })
     }
 
+    const itemsInCart = cart.map((item, index) => {
+      return Object.assign(allItemFoundInDatabase[index], {quantityBuy : item.quantityBuy} )
+    })
+
     return response
     .status(200)
-    .json({status:200, data : allItemFoundInDatabase ,  message : "We get the cart from the database sucessfully" })
+    .json({status:200, data : itemsInCart,  message : "We get the cart from the database sucessfully" })
   
   }
 
