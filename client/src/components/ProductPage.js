@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 const ProductPage = () => {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null);
-    const [quantity, setQuantity] = useState(1);
+    const [quantityBuy, setQuantity] = useState(1);
     const  _id  = useParams()._id;
 
     useEffect(() => {
@@ -34,7 +34,7 @@ return (
     ) : (
         <ProductDetails
         product={product}
-        quantity={quantity}
+        quantityBuy= {quantityBuy}
         onQuantityChange={handleQuantityChange}
         />
     )}
@@ -42,16 +42,33 @@ return (
 );
 };
 
-const ProductDetails = ({ product, quantity, onQuantityChange }) => {
+const ProductDetails = ({ product, quantityBuy, onQuantityChange }) => {
 const [notification, setNotification] = useState(null);
 
+
 const handleAddToCart = async () => {
+
+    const requestData = {
+        _id: product._id,
+        numInStock: product.numInStock,
+        name: product.name,
+        price: product.price,
+        body_location: product.body_location,
+        category: product.category,
+        companyId: product.companyId,
+        imageSrc: product.imageSrc,
+        quantityBuy: quantityBuy,
+    };
+
+    console.log(requestData)
+
     fetch("/api/addToCart", {
     method: "POST",
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
     },
+    body: JSON.stringify(requestData)
     })
     .then((response) => response.json())
     .then((data) => {
@@ -70,7 +87,6 @@ return (
     </ImgDiv>
     <ItemInfo>
         <h3>{product.name}</h3>
-        <p>{product.description}</p>
         <h4>Price: {product.price}</h4>
         <h4>Category: {product.category}</h4>
         <h4>body Location: {product.body_location}</h4>
@@ -79,7 +95,7 @@ return (
         <QuantityInput
             type="number"
             min="1"
-            value={quantity}
+            value={quantityBuy}
             onChange={onQuantityChange}
         />
         </QuantityContainer>
@@ -96,7 +112,7 @@ const ImgDiv = styled.div`
 `;
 
 const DetailContainer = styled.div`
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -104,6 +120,11 @@ const DetailContainer = styled.div`
     align-items: center;
     text-align: left;
     width: 350px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
 `;
 
 const ItemImage = styled.img`
@@ -113,18 +134,30 @@ const ItemImage = styled.img`
 `;
 
 const ItemInfo = styled.div`
-    display: flex;
+  display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-top: 20px;
     width: 100%;
     height: 100%;
+    h4 {
+        text-align: right;
+        margin-right: 10px;
+        margin-top:10px;
+        margin-bottom:0;
+    }
+    h3 {
+        text-align: center;
+    }
 `;
 
 const QuantityContainer = styled.div`
     display: flex;
     align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: flex-end;
+    margin-right: 10px;
     label {
         margin-right: 10px;
     }
@@ -136,11 +169,14 @@ const QuantityInput = styled.input`
 `;
 
 const AddToCartButton = styled.button`
-    background-color: #4caf50;
+   background-color: #4caf50;
     color: white;
     padding: 10px;
     border: none;
     border-radius: 5px;
+    margin-left: 72px;
+    margin-bottom: 10px;
+    width: 200px;
     cursor: pointer;
 `;
 

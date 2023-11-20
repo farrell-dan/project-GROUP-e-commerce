@@ -24,41 +24,55 @@ const addToCart = async (req, res) => {
     const cartsCollection = db.collection("Cart");
 
     // Get item details from the request body
-    const { _id, quantityBuy } = req.body;
+    const {  _id, numInStock, name, price, body_location, category, companyId, imageSrc, quantityBuy } = req.body;
 
     // Check if the cart exists
     const cartExists = (await cartsCollection.find({}).count()) > 0;
     
     if (!cartExists) {
       // If the cart does not exist, create a new collection for carts
-      await cartsCollection.insertOne({ _id, quantityBuy });
+      await cartsCollection.insertOne({
+        _id,
+        numInStock,
+        name,
+        price,
+        body_location,
+        category,
+        companyId,
+        imageSrc,
+        quantityBuy,
+      });
 
       res.status(201).json({
         message: "Cart created successfully with the initial item",
-        data: { _id, quantityBuy },
+        data:  req.body ,
       });
       console.log("Cart created successfully with the initial item");
     } else {
       // If the cart exists, check if the item already exists
-      const existingItem = await cartsCollection.findOne({ _id });
-
-      if (existingItem) {
-        // If the item already exists, update the quantityBuy
-        const updatedQuantity = existingItem.quantityBuy + 1;
-
-        await cartsCollection.updateOne(
-          { _id },
-          { $set: { quantityBuy: updatedQuantity } }
-        );
-
+      const result = await cartsCollection.findOneAndUpdate(
+        { _id },
+        { $inc: { quantityBuy: req.body.quantityBuy } },
+        { returnDocument: 'after' }
+      );
+      
+      if (result.value) {
         res.status(200).json({
           message: "Quantity updated in the existing cart",
-          data: { _id, quantityBuy: updatedQuantity },
+          data: { _id, quantityBuy: result.value.quantityBuy },
         });
         console.log("Quantity updated in the existing cart");
       } else {
         // If the item does not exist, insert a new item into the cart
-        await cartsCollection.insertOne({ _id, quantityBuy });
+        await cartsCollection.insertOne({ _id,
+          numInStock,
+          name,
+          price,
+          body_location,
+          category,
+          companyId,
+          imageSrc,
+          quantityBuy });
 
         res.status(201).json({
           message: "Item added to the cart successfully",
