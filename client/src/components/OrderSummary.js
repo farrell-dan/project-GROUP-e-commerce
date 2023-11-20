@@ -13,10 +13,8 @@ const OrderSummary = ({cart}) => {
 
   let subTotal = 0;
 
-  newCart && (subTotal = cart.reduce((sum, item) => {
-    if (item.numInStock > 1) {
+  newCart && (subTotal = newCart.reduce((sum, item) => {
     return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
-    }
     },0)
   )
 
@@ -45,7 +43,7 @@ const OrderSummary = ({cart}) => {
               <p>Estimated Shipping:</p>
               <p>Estimated Total : </p>
               </div>
-              {!isNaN(subTotal) && (
+              {(
               <div style={{textAlign:"right"}}>
               <p>{Math.round(subTotal*100)/100} $ </p>
               <p>20.99 $</p>

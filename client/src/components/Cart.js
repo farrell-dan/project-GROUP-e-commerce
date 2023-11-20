@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Cart = () => {
 
   const [loading, setLoading] = useState(true);
-    const [cart, setCart] = useState([]);  
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         fetch(`/api/cart/`)
@@ -93,7 +93,6 @@ const ItemCard = ({setCart, item}) => {
                         <ItemImage src={item.imageSrc} />
                     </StyledLink>
                   </ImgDiv>
-                  {console.log(item)}
                   <h3>{item.name}</h3>
                   <p> Price : {item.price}</p>
                   <div style={{display:"flex"}}>
