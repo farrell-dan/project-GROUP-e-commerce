@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 
 
@@ -11,6 +11,10 @@ const Cart = () => {
     const [cart, setCart] = useState([]);
     const [cartBuy, setCartBuy] = useState([]);
     const [itemBuy, SetitemBuy] = useState([]);
+    const [buying, SetBuying] = useState(false)
+    const [errorMessage, SetErrorMessage] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`/api/cart/`)
@@ -26,36 +30,66 @@ const Cart = () => {
     }, []);
     
     const BuyItem = () => {
+      SetBuying(true)
       fetch(`/api/BuyItem`)
       .then((response) => response.json())
       .then((data) => {
-        setCartBuy(data.data);
-        console.log("BUY DONE!");
+
+        if (data.message !== "purchase successful") {
+          SetErrorMessage(data.message);
+        } else {
+          setCartBuy(data.data);
+          SetBuying(false)
+        }
       })
       .catch((error) => {
           console.error(`Error fetching items from the cart`, error);
       });
+
+      navigate("/cart")
     }
+
+let subTotal = 0;
+
+cart && (subTotal = cart.reduce((sum, item) => {
+  return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
+  },0)
+)
 
     return (
       <Element>
           {loading ? (
               <CircularProgress />
           ) : (
-            <>
+            <PageContainer>
               <ItemContainer>
                 {
                   !cart ? (
-                  <h1> You cart is empty</h1>) : (
-                    
+                  <h1> You cart is empty</h1>) : (  
                   cart.map((item) => (
                       <ItemCard key={item._id} item={item} />
                   ))
                   )
               }
               </ItemContainer>
-            <button onClick={BuyItem}>Buy Items</button>
-            </>
+              <OrderSummary>
+              <h1>Order Summary</h1>
+              <OrderInformation>
+              <div>  
+              <p>Subtotal :</p>
+              <p>Estimated Shipping:</p>
+              <p>Estimated Total : </p>
+              </div>
+              <div style={{textAlign:"right"}}>
+              <p>{Math.round(subTotal*100)/100} $ </p>
+              <p>20.99 $</p>
+              <p>{Math.round(subTotal * 1.15625) + 20.99} $</p>
+              </div>
+              </OrderInformation>
+              <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>
+              {errorMessage && <UserMessage>{errorMessage}</UserMessage>}
+            </OrderSummary>
+            </PageContainer>
           )}
       </Element>
   );
@@ -81,14 +115,14 @@ const ItemCard = ({ item }) => {
 const StyledLink = styled(Link)`
 text-decoration: none;
 color: inherit;
+width:100%;
 `
-
 
 const ItemInfo = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-items: left;
   margin-left: 20px; 
   width: 100%;
   height: 100%;
@@ -104,7 +138,6 @@ const ItemImage = styled.img`
   border-radius: 20px;
   padding: 10px;
 `;
-
 
 const Card = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -130,11 +163,50 @@ const Card = styled.div`
   }
 `;
 
+const OrderSummary = styled.div`
+display: flex;
+flex-direction: column;
+padding:20px 40px;
+margin: 20px;
+width: 75%;
+height: 100%;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+border: solid black;
+border-radius: 10px;
+`
+
+const OrderInformation = styled.div`
+display: grid;
+grid-template-columns:1fr 1fr;
+grid-gap: 50%;
+`
+
+const CheckoutButton = styled.button`
+width:75%;
+text-align: center;
+align-self: center;
+border-radius: 15px;
+margin:20px;
+padding:10px;
+font-size: 1.5em;
+outline: auto;
+`
+
+const UserMessage = styled.p`
+
+`
+
+const PageContainer = styled.div`
+display : flex;
+flex-direction: row;
+`
+
 const ItemContainer = styled.div`
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap; 
   width: 100%;
-  justify-content: center;
+  justify-content: left;
 `;
 
 const Element = styled.div`
