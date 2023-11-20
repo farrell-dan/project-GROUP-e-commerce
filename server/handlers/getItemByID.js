@@ -16,9 +16,7 @@ const database = "ECommerceWebsite"
 
 const getItemByID = async (request, response) => {
   const { _id } = request.params;
-
-  console.log(_id);
-
+  
   if (!_id) {
   return response
   .status(401)
@@ -42,7 +40,7 @@ const getItemByID = async (request, response) => {
         //after all test is passed 
         return response
         .status(200)
-        .json({status:200, message : "Item sucessfully found: ", item : item });
+        .json({status:200, message : "Item sucessfully found: ", data : item });
   }
   
   catch(error) {
