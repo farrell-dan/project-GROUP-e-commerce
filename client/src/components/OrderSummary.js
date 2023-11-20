@@ -14,7 +14,9 @@ const OrderSummary = ({cart}) => {
   let subTotal = 0;
 
   newCart && (subTotal = cart.reduce((sum, item) => {
+    if (item.numInStock > 1) {
     return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
+    }
     },0)
   )
 
@@ -34,7 +36,6 @@ const OrderSummary = ({cart}) => {
         console.error(`Error fetching items from the cart`, error);
     });
   }
-
               return (
               <OrderSummaryStyle>
               <h1>Order Summary</h1>
@@ -44,11 +45,13 @@ const OrderSummary = ({cart}) => {
               <p>Estimated Shipping:</p>
               <p>Estimated Total : </p>
               </div>
+              {!isNaN(subTotal) && (
               <div style={{textAlign:"right"}}>
               <p>{Math.round(subTotal*100)/100} $ </p>
               <p>20.99 $</p>
               <p>{Math.round(subTotal * 1.15625) + 20.99} $</p>
               </div>
+              )}
               </OrderInformation>
               {cart &&
               <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>}

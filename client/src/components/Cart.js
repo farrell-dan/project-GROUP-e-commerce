@@ -93,11 +93,12 @@ const ItemCard = ({setCart, item}) => {
                         <ItemImage src={item.imageSrc} />
                     </StyledLink>
                   </ImgDiv>
+                  {console.log(item)}
                   <h3>{item.name}</h3>
                   <p> Price : {item.price}</p>
                   <div style={{display:"flex"}}>
                   <button onClick={add}>+</button>
-                  <p>Quantity : {ModifiedQuantity || item.quantityBuy}</p>
+                  <p>Quantity : {(item.numInStock < 1) ? "OutOfStock" : (ModifiedQuantity || item.quantityBuy)} </p>
                   <button onClick={remove}>-</button>
                   <button className="update" onClick={ModifyQuantity}>Update</button>
                   </div>
