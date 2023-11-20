@@ -10,102 +10,112 @@ const ProductPage = () => {
     const { productId } = useParams();
 
     useEffect(() => {
-        fetch(`/api/getItemById/${productId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setProduct(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error(`Error fetching product details for ID ${productId}:`, error);
-                setLoading(false);
-            });
-    }, [productId]);
+    fetch(`/api/getItemById/${productId}`)
+    .then((response) => response.json())
+    .then((data) => {
+        setProduct(data);
+        setLoading(false);
+    })
+    .catch((error) => {
+        console.error(`Error fetching product details for ID ${productId}:`, error);
+        setLoading(false);
+    });
+}, [productId]);
 
-    const handleQuantityChange = (event) => {
-        const newQuantity = parseInt(event.target.value, 10);
-        setQuantity(newQuantity);
-    };
+const handleQuantityChange = (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    setQuantity(newQuantity);
+};
 
-    return (
-        <Element>
-            {loading ? (
-                <CircularProgress />
-            ) : (
-                <ProductDetails
-                    product={product}
-                    quantity={quantity}
-                    onQuantityChange={handleQuantityChange}
-                />
-            )}
-        </Element>
-    );
+return (
+    <Element>
+    {loading ? (
+        <CircularProgress />
+    ) : (
+        <ProductDetails
+        product={product}
+        quantity={quantity}
+        onQuantityChange={handleQuantityChange}
+        />
+    )}
+    </Element>
+);
 };
 
 const ProductDetails = ({ product, quantity, onQuantityChange }) => {
-    const [notification, setNotification] = useState(null);
+const [notification, setNotification] = useState(null);
 
-    
-    
-    const handleAddToCart = async () => {
-
-fetch("/api/addToCart", {
-    method:"POST",
+const handleAddToCart = async () => {
+    fetch("/api/addToCart", {
+    method: "POST",
     headers: {
-        Accept : "application/json",
-        "Content-Type" : "application/json",
+        Accept: "application/json",
+        "Content-Type": "application/json",
     },
     })
-
     .then((response) => response.json())
-    .then(data => {
-    console.log(data);
-    console.log(data.data._id);
-    console.log(data.message);
-    if (data.message !== "Item added to the existing cart successfully") {
+    .then((data) => {
+        console.log(data.message);
+        if (data.message !== "Item added to the cart successfully") {
         console.log("error");
         }
-    })
-    }
-
-
-    return (
-        <DetailContainer>
-            <ItemImage src={product.item.imageSrc} alt={product.item.name} />
-            <ItemInfo>
-                <h2>{product.item.name}</h2>
-                <p>{product.item.description}</p>
-                <p>Price: {product.item.price}</p>
-                <QuantityContainer>
-                    <label>Quantity:</label>
-                    <QuantityInput
-                        type="number"
-                        min="1"
-                        value={quantity}
-                        onChange={onQuantityChange}
-                    />
-                </QuantityContainer>
-                <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
-            </ItemInfo>
-            {notification && <Notification>{notification}</Notification>}
-        </DetailContainer>
-    );
+    });
 };
 
-const DetailContainer = styled.div`
+return (
+    <DetailContainer>
+    <ImgDiv>
+        <ItemImage src={product.item.imageSrc} alt={product.item.name} />
+    </ImgDiv>
+    <ItemInfo>
+        <h3>{product.item.name}</h3>
+        <p>{product.item.description}</p>
+        <h4>Price: {product.item.price}</h4>
+        <QuantityContainer>
+        <label>Quantity:</label>
+        <QuantityInput
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={onQuantityChange}
+        />
+        </QuantityContainer>
+        <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
+    </ItemInfo>
+    {notification && <Notification>{notification}</Notification>}
+    </DetailContainer>
+);
+};
+
+const ImgDiv = styled.div`
     display: flex;
-    margin-top: 20px;
+    justify-content: center;
+`;
+
+const DetailContainer = styled.div`
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    align-items: center;
+    text-align: left;
+    width: 350px;
 `;
 
 const ItemImage = styled.img`
-    max-width: 300px;
+    max-width: 200px;
     border-radius: 20px;
     padding: 10px;
 `;
 
 const ItemInfo = styled.div`
-    margin-left: 20px;
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
+    height: 100%;
 `;
 
 const QuantityContainer = styled.div`
@@ -129,17 +139,6 @@ const AddToCartButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-`;
-
-const Notification = styled.div`
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: #4caf50;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
 
 const Element = styled.div`
