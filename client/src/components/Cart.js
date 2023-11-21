@@ -33,8 +33,8 @@ const Cart = () => {
                 {
                   !cart ? (
                   <h1> You cart is empty</h1>) : (  
-                  cart.map((item) => (
-                      <ItemCard key={item._id} item={item} cart={cart} setCart={setCart}/>
+                  cart.map((item, index) => (
+                      <ItemCard key={item._id} item={item} cart={cart} setCart={setCart} index={index}/>
                   ))
                   )
               }
@@ -46,9 +46,11 @@ const Cart = () => {
   );
 };
 
-const ItemCard = ({setCart, item}) => {
+const ItemCard = ({setCart, item, index}) => {
 
   const [ModifiedQuantity, SetModifiedQuantity] = useState(item.quantityBuy);
+
+  let outOfStock = false;
 
   const ModifyQuantity = () => {
     
@@ -88,20 +90,22 @@ const ItemCard = ({setCart, item}) => {
   return (
           <Card>
               <ItemInfo>
+              <h2>{index+1}</h2>
                   <ImgDiv>
                     <StyledLink to={`/product/${item._id}`} key={item._id}>
                         <ItemImage src={item.imageSrc} />
                     </StyledLink>
                   </ImgDiv>
+                  {outOfStock = item.numInStock < 1}
                   <h3>{item.name}</h3>
                   <p> Price : {item.price}</p>
                   <div style={{display:"flex"}}>
-                  <button onClick={add}>+</button>
-                  <p>Quantity : {(item.numInStock < 1) ? "OutOfStock" : (ModifiedQuantity || item.quantityBuy)} </p>
-                  <button onClick={remove}>-</button>
-                  <button className="update" onClick={ModifyQuantity}>Update</button>
+                  <button onClick={add} disabled={outOfStock}>+</button>
+                  <p>Qty : {(outOfStock) ?"Out Of Stock": (ModifiedQuantity || item.quantityBuy)} </p>
+                  <button onClick={remove} disabled={outOfStock}>-</button>
+                  <button className="update" onClick={ModifyQuantity} disabled={outOfStock}>Update</button>
                   </div>
-                  <button className="fullSize" ><DeleteIcon/></button>
+                  <button className="delete" ><DeleteIcon/></button>
               </ItemInfo>
           </Card>
   );
@@ -130,16 +134,15 @@ const ItemInfo = styled.div`
 }
 
 .update{
-  width:35%;
+  width:25%;
   margin-left: 2%;
 }
 
-.fullSize {
-  width:20%;
-  margin-right:85%;
-}
-
-`;
+.delete {
+  width:10%;
+  margin-bottom:10px;
+  align-items: left;
+}`;
 
 const ImgDiv = styled.div`
 display: flex;
@@ -155,7 +158,7 @@ const ItemImage = styled.img`
 const Card = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  width: 350px;
+  width: 400px;
   display: flex;
   flex-direction: row;
   margin: 10px;   

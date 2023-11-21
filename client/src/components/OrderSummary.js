@@ -9,14 +9,19 @@ const OrderSummary = ({cart}) => {
 
   const [errorMessage, SetErrorMessage] = useState(null);
   const [buying, SetBuying] = useState(false);
-  const [newCart, setNewcart] = useState(cart);
+  const [subTotal, setSubTotal] = useState(0);
+  
+  let total = 0;
 
-  let subTotal = 0;
-
-  newCart && (subTotal = newCart.reduce((sum, item) => {
-    return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
-    },0)
-  )
+  useEffect(() => { 
+        for (let index = 0; index < cart.length; index++) {
+        const item = cart[index];
+        if(item.numInStock > 1) {
+        total += ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
+      }
+    }
+    setSubTotal(total);
+  },[cart])
 
   const BuyItem = () => {
     SetBuying(true)
