@@ -4,13 +4,15 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import CheckoutForm from "./CheckoutForm";
 
 const OrderSummary = ({cart}) => {
 
   const [errorMessage, SetErrorMessage] = useState(null);
   const [buying, SetBuying] = useState(false);
   const [subTotal, setSubTotal] = useState(0);
-  
+    const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+
   let total = 0;
 
   useEffect(() => { 
@@ -28,17 +30,24 @@ const OrderSummary = ({cart}) => {
     fetch(`/api/BuyItem`)
     .then((response) => response.json())
     .then((data) => {
-
-      if (data.message !== "purchase successful") {
-        SetErrorMessage(data.message);
-      } else {
-        SetBuying(false)
-      }
+      console.log(data)
+      
     })
     .catch((error) => {
         console.error(`Error fetching items from the cart`, error);
+        SetBuying(false);
     });
-  }
+  };
+
+  const handleFormSubmit = () => {
+    BuyItem();
+    setShowCheckoutForm(false);
+  };
+
+  const handleFormClose = () => {
+    setShowCheckoutForm(false);
+  };
+
               return (
               <OrderSummaryStyle>
               <h1>Order Summary</h1>
@@ -56,10 +65,23 @@ const OrderSummary = ({cart}) => {
               </div>
               )}
               </OrderInformation>
-              {cart &&
-              <CheckoutButton disabled={buying} onClick={BuyItem}>Checkout</CheckoutButton>}
-              {errorMessage && <UserMessage>{errorMessage}</UserMessage>} 
-              {/* // : navigate("checkoutPage")} */}
+              {cart && (
+              <CheckoutButton
+                disabled={buying}
+                onClick={() => setShowCheckoutForm(true)}
+              >
+                Checkout
+              </CheckoutButton>
+              )}
+              {errorMessage && <UserMessage>{errorMessage}</UserMessage>}
+              {showCheckoutForm && (
+                <CheckoutForm
+                  open={showCheckoutForm}
+                  handleClose={() => setShowCheckoutForm(false)}
+                  handleSubmit={handleFormSubmit}
+                  
+                />
+              )}
               </OrderSummaryStyle>
               )
 }

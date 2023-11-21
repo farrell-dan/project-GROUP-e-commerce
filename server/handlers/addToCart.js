@@ -6,10 +6,6 @@ const { MONGO_URI } = process.env;
 
 // Function to create a new collection for carts with an initial item or add an item to an existing cart
 const addToCart = async (req, res) => {
-  // // Check if "name" is present in the request body
-  // if (!req.body.name) {
-  //   return res.status(400).json({ error: "Name is required in the request body" });
-  // }
 
   const client = new MongoClient(MONGO_URI);
 
@@ -24,11 +20,21 @@ const addToCart = async (req, res) => {
     const cartsCollection = db.collection("Cart");
 
     // Get item details from the request body
-    const {  _id, numInStock, name, price, body_location, category, companyId, imageSrc, quantityBuy } = req.body;
+    const {
+      _id,
+      numInStock,
+      name,
+      price,
+      body_location,
+      category,
+      companyId,
+      imageSrc,
+      quantityBuy,
+    } = req.body;
 
     // Check if the cart exists
     const cartExists = (await cartsCollection.find({}).count()) > 0;
-    
+
     if (!cartExists) {
       // If the cart does not exist, create a new collection for carts
       await cartsCollection.insertOne({
@@ -45,7 +51,7 @@ const addToCart = async (req, res) => {
 
       res.status(201).json({
         message: "Cart created successfully with the initial item",
-        data:  req.body ,
+        data: req.body,
       });
       console.log("Cart created successfully with the initial item");
     } else {
@@ -56,7 +62,6 @@ const addToCart = async (req, res) => {
         { returnDocument: 'after' }
       );
 
-      
       if (result) {
         res.status(200).json({
           message: "Quantity updated in the existing cart",
@@ -65,7 +70,8 @@ const addToCart = async (req, res) => {
         console.log("Quantity updated in the existing cart");
       } else {
         // If the item does not exist, insert a new item into the cart
-        await cartsCollection.insertOne({ _id,
+        await cartsCollection.insertOne({
+          _id,
           numInStock,
           name,
           price,
@@ -73,7 +79,8 @@ const addToCart = async (req, res) => {
           category,
           companyId,
           imageSrc,
-          quantityBuy });
+          quantityBuy,
+        });
 
         res.status(201).json({
           message: "Item added to the cart successfully",
