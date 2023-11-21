@@ -14,10 +14,8 @@ const getUniqueCategories = async (req, res) => {
   
       if (categories && categories.length > 0) {
         res.status(200).json({ status: 200, message: "Here are your categories", data: categories });
-        console.log(categories)
       } else {
         res.status(404).json({ status: 404, message: "No categories found :(" });
-        console.log("No categories found :(")
       }
     } catch (error) {
       console.error(error);

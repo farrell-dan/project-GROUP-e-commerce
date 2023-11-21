@@ -30,8 +30,6 @@ const OrderSummary = ({cart}) => {
     fetch(`/api/BuyItem`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
-      
     })
     .catch((error) => {
         console.error(`Error fetching items from the cart`, error);

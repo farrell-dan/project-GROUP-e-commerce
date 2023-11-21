@@ -77,7 +77,7 @@ const BuyItem = async (request, response) => {
     if (listOfItemAvailableToBuyInDatabase.length < 1) {
       return response
       .status(401)
-      .json({status:401, message : "We are sorry to tell you that all the items in your cart is out of stock" })
+      .json({status:401, message : "We are sorry to tell you that the ammount you ask for the items in your cart is out of stock" })
     }
 
 

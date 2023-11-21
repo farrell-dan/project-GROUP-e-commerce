@@ -29,7 +29,14 @@ const CheckoutForm = ({ open, handleClose }) => {
         .then((data) => {
             if (data.message === "purchase successful") {
                 SetSuccessBuy(true)
-                setvalidationMessage("Purchase successful !")
+                setvalidationMessage("Purchase successful!")
+                handleClose();
+                setTimeout(()=>{
+                    navigate("/")
+                    handleClose();
+                },2000);
+            } else {
+                setErrorMessage(data.message)
             }
         })
         .catch((error) => {
@@ -53,6 +60,7 @@ const CheckoutForm = ({ open, handleClose }) => {
 
         BuyItem();
 
+        if (successBuy) {
             setTimeout(()=>{
                 handleClose();
             },2000);
@@ -60,6 +68,9 @@ const CheckoutForm = ({ open, handleClose }) => {
             setTimeout(()=>{
                 navigate("/")
             },3000);
+        } else {
+            setvalidationMessage("");
+        }
 
             setFormData({
                 name: '',

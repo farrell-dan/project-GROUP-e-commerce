@@ -12,8 +12,6 @@ const BuyerVerification = async (request, response) => {
   const testVisaExpirationDate = new RegExp(/^\d{1,2}\/{1}\d{1,2}$/);
 
   const {firstName, lastName, creditCardNumber, expiration} = request.body;
-  
-  console.log(expiration);
 
   try {
 
