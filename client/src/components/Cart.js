@@ -86,6 +86,32 @@ const ItemCard = ({setCart, item, index}) => {
       SetModifiedQuantity(ModifiedQuantity - 1)
     }     
   }
+
+  const deleteItem = () => {
+    fetch(`/api/deleteItemFromCart`, {
+      method:"UPDATE",
+      headers: {
+      Accept : "application/json",
+      "Content-Type" : "application/json",
+      },
+      body:JSON.stringify({_id : item._id})
+    })
+    .then((response) => response.json())
+    .then((data) => {
+    })
+    .catch((error) => {
+        console.error(`Error fetching items from the cart`, error);
+    });
+
+    fetch(`/api/cart/`)
+        .then((response) => response.json())
+        .then((data) => {
+            setCart(data.data);
+        })
+        .catch((error) => {
+            console.error(`Error fetching items from the cart`, error);
+        });
+  }
   
   return (
           <Card>
@@ -105,7 +131,7 @@ const ItemCard = ({setCart, item, index}) => {
                   <button onClick={remove} disabled={outOfStock}>-</button>
                   <button className="update" onClick={ModifyQuantity} disabled={outOfStock}>Update</button>
                   </div>
-                  <button className="delete" ><DeleteIcon/></button>
+                  <button className="delete"  onClick={deleteItem}><DeleteIcon/></button>
               </ItemInfo>
           </Card>
   );

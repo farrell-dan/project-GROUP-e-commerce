@@ -15,7 +15,7 @@ const OrderSummary = ({cart}) => {
 
   let total = 0;
 
-  useEffect(() => { 
+  cart && useEffect(() => { 
         for (let index = 0; index < cart.length; index++) {
         const item = cart[index];
         if(item.numInStock > 1) {
