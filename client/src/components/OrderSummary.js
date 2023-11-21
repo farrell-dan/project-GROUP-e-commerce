@@ -1,7 +1,7 @@
 //Component Order summary 
 
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import CheckoutForm from "./CheckoutForm";
@@ -10,15 +10,20 @@ const OrderSummary = ({cart}) => {
 
   const [errorMessage, SetErrorMessage] = useState(null);
   const [buying, SetBuying] = useState(false);
-  const [newCart, setNewcart] = useState(cart);
-  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  const [subTotal, setSubTotal] = useState(0);
+    const [showCheckoutForm, setShowCheckoutForm] = useState(false);
 
-  let subTotal = 0;
+  let total = 0;
 
-  newCart && (subTotal = newCart.reduce((sum, item) => {
-    return sum + ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
-    },0)
-  )
+  cart && useEffect(() => { 
+        for (let index = 0; index < cart.length; index++) {
+        const item = cart[index];
+        if(item.numInStock > 1) {
+        total += ((Number(item.price.slice(1))) * (Number(item.quantityBuy)))
+      }
+    }
+    setSubTotal(total);
+  },[cart])
 
   const BuyItem = () => {
     SetBuying(true)
@@ -50,13 +55,13 @@ const OrderSummary = ({cart}) => {
               <div>  
               <p>Subtotal :</p>
               <p>Estimated Shipping:</p>
-              <p>Estimated Total : </p>
+              <p>Estimated Total with taxes: </p>
               </div>
               {(
               <div style={{textAlign:"right"}}>
               <p>{Math.round(subTotal*100)/100} $ </p>
               <p>20.99 $</p>
-              <p>{Math.round(subTotal * 1.15625) + 20.99} $</p>
+              <p>{Math.round((subTotal * 1.15) + 20.99)} $</p>
               </div>
               )}
               </OrderInformation>
@@ -72,7 +77,7 @@ const OrderSummary = ({cart}) => {
               {showCheckoutForm && (
                 <CheckoutForm
                   open={showCheckoutForm}
-                  handleClose={() => setShowCheckoutForm(false)}
+                  handleClose={handleFormClose}
                   handleSubmit={handleFormSubmit}
                   
                 />

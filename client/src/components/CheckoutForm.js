@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -15,22 +16,27 @@ const CheckoutForm = ({ open, handleClose }) => {
         expirationDate: '',
     });
     const [buying, SetBuying] = useState(false);
+    const [successBuy, SetSuccessBuy] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [validationMessage, setvalidationMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const BuyItem = () => {
         SetBuying(true)
         fetch(`/api/BuyItem`)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
-          
+            if (data.message === "purchase successful") {
+                SetSuccessBuy(true)
+                setvalidationMessage("Purchase successful !")
+            }
         })
         .catch((error) => {
             console.error(`Error fetching items from the cart`, error);
             SetBuying(false);
         });
-      };
-
-    const [errorMessage, setErrorMessage] = useState('');
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,13 +53,20 @@ const CheckoutForm = ({ open, handleClose }) => {
 
         BuyItem();
 
-        setFormData({
-            name: '',
-            creditCardNumber: '',
-            expirationDate: '',
-        });
+            setTimeout(()=>{
+                handleClose();
+            },2000);
+            
+            setTimeout(()=>{
+                navigate("/")
+            },3000);
 
-        handleClose();
+            setFormData({
+                name: '',
+                creditCardNumber: '',
+                expirationDate: '',
+            });
+        
     };
 
     return (
@@ -98,6 +111,7 @@ const CheckoutForm = ({ open, handleClose }) => {
                     required
                 />
                 {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+                {validationMessage && <ValidationText>{validationMessage}</ValidationText>}
             </DialogContent>
             <DialogActions>
                 <StyledCancelButton onClick={handleClose} color="primary">
@@ -115,6 +129,11 @@ const ErrorText = styled.p`
     color: red;
     margin-top: 5px;
 `;
+
+const ValidationText = styled.p`
+    color:green;
+    margin-top: 5px;
+`
 
 
 const StyledDialog = styled(Dialog)`
