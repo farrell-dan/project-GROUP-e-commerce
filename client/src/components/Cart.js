@@ -124,7 +124,7 @@ const ItemInfo = styled.div`
 
   button {
   height:50%;
-  margin: auto;
+  margin-bottom: 10px;
   align-self: center;
   width:10%;
 }
@@ -161,6 +161,7 @@ const Card = styled.div`
   margin: 10px;   
   align-items: center;
   text-align: left;
+  background-color: white;
 
   h1 {
       margin: 0;
@@ -173,6 +174,7 @@ const Card = styled.div`
       font-weight: bold;
       text-align: right;
       margin-right: 10px;
+      margin-left: 10px;
   }
 `;
 
@@ -181,6 +183,8 @@ const Card = styled.div`
 const PageContainer = styled.div`
 display : flex;
 flex-direction: row;
+justify-content: center;
+
 `
 
 const ItemContainer = styled.div`
@@ -188,7 +192,8 @@ const ItemContainer = styled.div`
   flex-direction: column;
   flex-wrap: wrap; 
   width: 100%;
-  justify-content: left;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Element = styled.div`
