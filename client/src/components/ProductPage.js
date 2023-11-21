@@ -125,6 +125,7 @@ const DetailContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: white;
 
 `;
 
@@ -185,6 +186,7 @@ const Element = styled.div`
     margin-top: 40px;
     margin-left: 30px;
     margin-right: auto;
+    height: 100vh;
 `;
 
 export default ProductPage;
