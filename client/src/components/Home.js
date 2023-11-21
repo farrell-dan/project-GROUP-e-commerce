@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import banner from "../images/banner.jpg";
 
+
 const Home = () => {
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
@@ -43,16 +44,10 @@ const Home = () => {
         fetchCategoryImages();
     }, [categories]);
 
-    const CategoryImageContainer = styled.div`
-        // Your styling for the container
-    `;
-
+    
     return (
         <Element>
-            {loading ? (
-                <CircularProgress />
-            ) : (
-                <>
+            
                     <Banner src={banner} alt="Banner" />
                     <CategoryContainer>
                         <h2>Product Categories</h2>
@@ -74,11 +69,16 @@ const Home = () => {
                             ))}
                         </CategoryList>
                     </CategoryContainer>
-                </>
-            )}
+              
+            
         </Element>
     );
 };
+
+const CategoryImageContainer = styled.div`
+        // Your styling for the container
+    `;
+
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -97,6 +97,8 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 70px;
+  margin-right: 70px;
 `;
 
 const CategoryList = styled.ul`
@@ -116,6 +118,7 @@ const CategoryItem = styled.li`
     flex-direction: column;
     margin: 10px;   
     align-items: center;
+    background-color: white;
 
 `;
 

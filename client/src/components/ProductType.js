@@ -126,6 +126,7 @@ const Card = styled.div`
     margin: 10px;   
     align-items: center;
     text-align: left;
+    background-color: white;
 
     h1 {
         margin: 0;
@@ -149,9 +150,9 @@ const ItemContainer = styled.div`
 `;
 
 const Element = styled.div`
-    margin-top: 40px;
-    margin-left: 30px;
-    margin-right: auto;
+    margin-top: 70px;
+    margin-left: 70px;
+    margin-right: 70px;
 `
 
 const SortingSelector = styled.div`

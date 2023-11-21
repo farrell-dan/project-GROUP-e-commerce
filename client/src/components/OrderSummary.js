@@ -85,12 +85,13 @@ const OrderSummaryStyle = styled.div`
 display: flex;
 flex-direction: column;
 padding:20px 40px;
-margin: 20px;
+margin: 20px 100px 20px 20px;
 width: 75%;
 height: 100%;
 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 border: solid black;
 border-radius: 10px;
+background-color: white;
 `
 
 const OrderInformation = styled.div`
