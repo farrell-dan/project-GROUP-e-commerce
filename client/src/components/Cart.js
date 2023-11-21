@@ -64,13 +64,20 @@ const ItemCard = ({cart, setCart, item, index}) => {
   })
   .then((response) => response.json())
   .then(data => {
-    console.log(data);
+    if (data.message === "Item added to the cart successfully") {
+      setCart(cart)
+    }    
   })
+  .catch((error) => {
+    console.error(`Error fetching items from the cart`, error);
+});
 
       fetch(`/api/cart/`)
         .then((response) => response.json())
         .then((data) => {
+          if (data.message === "We get the cart from the database sucessfully") {
             setCart(data.data);
+          }
         })
         .catch((error) => {
             console.error(`Error fetching items from the cart`, error);
