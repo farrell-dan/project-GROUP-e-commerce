@@ -50,7 +50,7 @@ app.get("/api/BuyItem", buyItem)
 
 app.get("/api/cart", showCart)
 
-app.delete("/api/deleteItemFromCart", deleteItemFromCart)
+app.patch("/api/deleteItemFromCart", deleteItemFromCart)
 
 app.post("/api/validateCard", buyerVerification)
 

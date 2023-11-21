@@ -46,7 +46,7 @@ const Cart = () => {
   );
 };
 
-const ItemCard = ({setCart, item, index}) => {
+const ItemCard = ({cart, setCart, item, index}) => {
 
   const [ModifiedQuantity, SetModifiedQuantity] = useState(item.quantityBuy);
 
@@ -89,7 +89,7 @@ const ItemCard = ({setCart, item, index}) => {
 
   const deleteItem = () => {
     fetch(`/api/deleteItemFromCart`, {
-      method:"UPDATE",
+      method:"PATCH",
       headers: {
       Accept : "application/json",
       "Content-Type" : "application/json",
@@ -98,19 +98,13 @@ const ItemCard = ({setCart, item, index}) => {
     })
     .then((response) => response.json())
     .then((data) => {
+      const deleteItem = data.data;
+      const tempcart = cart.filter(item => item._id !== deleteItem._id)
+      setCart(tempcart);
     })
     .catch((error) => {
         console.error(`Error fetching items from the cart`, error);
     });
-
-    fetch(`/api/cart/`)
-        .then((response) => response.json())
-        .then((data) => {
-            setCart(data.data);
-        })
-        .catch((error) => {
-            console.error(`Error fetching items from the cart`, error);
-        });
   }
   
   return (
