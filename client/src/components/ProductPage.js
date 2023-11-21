@@ -72,11 +72,6 @@ const handleAddToCart = async () => {
     })
     .then((response) => response.json())
     .then((data) => {
-        //this needs to be corrected. It console.logs "error" if it is successful.
-        console.log(data.message);
-        if (data.message !== "Item added to the cart successfully") {
-        console.log("error");
-        }
     });
 };
 
@@ -171,7 +166,7 @@ const QuantityInput = styled.input`
 `;
 
 const AddToCartButton = styled.button`
-   background-color: #4caf50;
+    background-color: #4caf50;
     color: white;
     padding: 10px;
     border: none;
@@ -180,6 +175,9 @@ const AddToCartButton = styled.button`
     margin-bottom: 10px;
     width: 200px;
     cursor: pointer;
+    &:focus {
+        outline: 2px solid black; 
+    }
 `;
 
 const Element = styled.div`

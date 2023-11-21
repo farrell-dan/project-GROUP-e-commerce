@@ -28,7 +28,6 @@ const ProductType = () => {
     const filter = (event) => {
         const filterChoose = event.target.value;
     
-        console.log(filterChoose);
     
         if (filterChoose === "Price:low to High" ) {
             const sortItems = items.slice().sort((a, b) => {
@@ -43,7 +42,6 @@ const ProductType = () => {
               return ((Number((b.price).slice(1)) - Number((a.price).slice(1))));
             });
   
-            console.log("SORTING");
             setItems(sortItems);
             SetFilterUse("Price:High To low")
           };

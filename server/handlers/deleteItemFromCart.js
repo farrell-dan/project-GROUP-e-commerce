@@ -8,14 +8,11 @@ const deleteItemFromCart = async (req, res) => {
 
   const client = new MongoClient(MONGO_URI);
 
-  console.log({_id})
   try {
     await client.connect();
 
     const db = client.db("ECommerceWebsite");
     const cartCollection = db.collection("Cart");
-
-    console.log(cartCollection)
 
     const deletedItem = await cartCollection.findOne({_id:_id});
 
@@ -31,7 +28,6 @@ const deleteItemFromCart = async (req, res) => {
       data: deletedItem,
     });
 
-    console.log("Item deleted successfully");
   } catch (error) {
     console.error("Error deleting item from the cart:", error);
     res.status(500).json({ error: "Internal Server Error" });

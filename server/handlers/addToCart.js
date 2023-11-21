@@ -53,7 +53,6 @@ const addToCart = async (req, res) => {
         message: "Cart created successfully with the initial item",
         data: req.body,
       });
-      console.log("Cart created successfully with the initial item");
     } else {
       // If the cart exists, check if the item already exists
       const result = await cartsCollection.findOneAndUpdate(
@@ -67,7 +66,6 @@ const addToCart = async (req, res) => {
           message: "Quantity updated in the existing cart",
           data: { _id, quantityBuy: result.quantityBuy },
         });
-        console.log("Quantity updated in the existing cart");
       } else {
         // If the item does not exist, insert a new item into the cart
         await cartsCollection.insertOne({
@@ -86,7 +84,6 @@ const addToCart = async (req, res) => {
           message: "Item added to the cart successfully",
           data: { _id, quantityBuy },
         });
-        console.log("Item added to the cart successfully");
       }
     }
   } catch (error) {
